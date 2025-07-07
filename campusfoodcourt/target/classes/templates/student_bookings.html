@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Bookings</title>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<h2 th:if="${success}" th:text="${success}" style="color:green;"></h2>
+<h2 th:if="${error}" th:text="${error}" style="color:red;"></h2>
+
+<h2>My Orders</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Dish</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.menuItemName}">Name</td>
+            <td th:text="${order.quantity}">1</td>
+            <td th:text="${order.price}">10</td>
+            <td th:text="${order.total}">10</td>
+            <td th:text="${#temporals.format(order.orderTime, 'dd-MM-yyyy HH:mm')}">Time</td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -24,4 +24,10 @@ public class TableBookingServiceImpl implements TableBookingService {
     public List<TableBooking> getBookingsByUser(User user) {
         return bookingRepository.findByUser(user);
     }
+
+	@Override
+	public void save(TableBooking booking) {
+		// TODO Auto-generated method stub
+		
+	}
 }

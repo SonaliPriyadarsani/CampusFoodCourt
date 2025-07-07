@@ -1,24 +1,33 @@
 package com.foodcourt.campusfoodcourt.config;
 
-import com.foodcourt.campusfoodcourt.security.UserDetailsServiceImpl;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.*;
+import com.foodcourt.campusfoodcourt.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.*;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.*;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+    private CustomAuthSuccessHandler customAuthSuccessHandler;
+
     @Bean
-    public DaoAuthenticationProvider authProvider(UserDetailsServiceImpl userDetailsService) {
+    public UserDetailsService userDetailsService(UserServiceImpl userServiceImpl) {
+        return userServiceImpl;
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authProvider(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
-    
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -28,13 +37,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests()
-                .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/menu/add").hasAuthority("ADMIN")  // ✅ Admin-only route
+                .requestMatchers("/", "/register", "/login", "/images/**" , "/css/**", "/js/**").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/menu", "/student/**", "/teacher/**").hasAnyRole("STUDENT", "TEACHER", "ADMIN")
+                .requestMatchers("/menu").hasAnyRole("STUDENT", "TEACHER", "ADMIN")
                 .anyRequest().authenticated()
             .and()
             .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/menu", true)
+                .successHandler(customAuthSuccessHandler)
                 .permitAll()
             .and()
             .logout()
@@ -43,8 +54,8 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll();
+
+
         return http.build();
     }
-
-
 }

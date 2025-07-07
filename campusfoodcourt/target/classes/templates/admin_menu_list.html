@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Admin Menu List</title></head>
+<body>
+
+<nav style="background-color: #333; padding: 10px; color: white; display: flex; justify-content: space-between;">
+    <div>
+        <a href="/admin/menu" style="color: white; text-decoration: none; margin-right: 20px;">Dashboard</a>
+        <a href="/admin/addmenuitem" style="color: white; text-decoration: none; margin-right: 20px;">Add Menu Item</a>
+    </div>
+
+    <div>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" style="background-color: #ff4d4d; border: none; color: white; padding: 8px 15px; cursor: pointer;">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<h2>All Menu Items (Admin View)</h2>
+<a th:href="@{/admin/addmenuitem}">Add New Item</a>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="item : ${menuItems}">
+            <td th:text="${item.name}">Name</td>
+            <td th:text="${item.description}">Description</td>
+            <td th:text="${item.price}">Price</td>
+            <td>
+                <form th:action="@{'/admin/delete/' + ${item.id}}" method="post">
+                    <button type="submit" onclick="return confirm('Are you sure to delete this item?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p th:if="${param.deleted}" style="color: green;">Item deleted successfully!</p>
+
+
+</body>
+</html>

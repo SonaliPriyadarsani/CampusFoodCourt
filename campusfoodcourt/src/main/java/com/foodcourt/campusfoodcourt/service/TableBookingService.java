@@ -9,4 +9,5 @@ import java.util.List;
 public interface TableBookingService {
     TableBooking bookTable(TableBooking booking);
     List<TableBooking> getBookingsByUser(User user);
+	void save(TableBooking booking);
 }

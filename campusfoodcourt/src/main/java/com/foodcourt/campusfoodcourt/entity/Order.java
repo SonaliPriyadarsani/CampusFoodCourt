@@ -24,7 +24,7 @@ public class Order {
     private int quantity;
 
     // Total price for this order
-    private double totalPrice;
+    private double Price;
 
     // Optional: Order time
     private LocalDateTime orderTime = LocalDateTime.now();
@@ -64,11 +64,11 @@ public class Order {
     }
 
     public double getTotalPrice() {
-        return totalPrice;
+        return Price;
     }
 
     public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+        this.Price = totalPrice;
     }
 
     public LocalDateTime getOrderTime() {

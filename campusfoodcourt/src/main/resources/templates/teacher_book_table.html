@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Book Table</title></head>
+<body>
+<h2>Book a Table (Teacher)</h2>
+<form th:action="@{/teacher/book-table}" th:object="${booking}" method="post">
+    <label>Table Number:</label>
+    <input type="number" th:field="*{tableNumber}" required/><br/>
+    <button type="submit">Book</button>
+</form>
+<p th:text="${message}"></p>
+<a href="/menu">Back to Menu</a>
+</body>
+</html>

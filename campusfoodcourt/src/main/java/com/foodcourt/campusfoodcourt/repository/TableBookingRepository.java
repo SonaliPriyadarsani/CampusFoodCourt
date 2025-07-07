@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface TableBookingRepository extends JpaRepository<TableBooking, Long> {
     List<TableBooking> findByUser(User user);
-}
+    List<TableBooking> findByStudent(User student);
+    List<TableBooking> findByTeacher(User teacher);
 
+}
