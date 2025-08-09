@@ -14,7 +14,7 @@
         <th>Order Time</th>
     </tr>
     <tr th:each="order : ${orders}">
-        <td th:text="${order.menuItemId}">Item ID</td>
+        <td th:text="${order.menuItem}">Item ID</td>
         <td th:text="${order.quantity}">Qty</td>
         <td th:text="${order.totalPrice}">Price</td>
         <td th:text="${order.orderTime}">Time</td>

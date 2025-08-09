@@ -20,7 +20,7 @@
         <td th:text="${item.price}">10</td>
         <td th:text="${item.quantity * item.price}">Total</td>
         <td>
-            <a th:href="@{'/cart/remove/' + ${item.menuItemId}}">Remove</a>
+            <a th:href="@{'/cart/remove/' + ${item.menuItem}}">Remove</a>
         </td>
     </tr>
 </table>

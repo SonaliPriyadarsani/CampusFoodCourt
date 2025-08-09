@@ -1,18 +1,18 @@
 package com.foodcourt.campusfoodcourt.entity;
 
 public class CartItem {
-    private Long menuItemId;
+    private Long menuItem;
     private String name;
     private double price;
     private int quantity;
 
     // Getters and Setters
-    public Long getMenuItemId() {
-        return menuItemId;
+    public Long getMenuItem() {
+        return menuItem;
     }
 
-    public void setMenuItemId(Long menuItemId) {
-        this.menuItemId = menuItemId;
+    public void setMenuItem(Long menuItem) {
+        this.menuItem = menuItem;
     }
 
     public String getName() {

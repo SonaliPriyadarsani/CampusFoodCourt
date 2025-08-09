@@ -23,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order placeOrder(Order order) {
         // ✅ Get the MenuItem using menuItemId from the order
-        MenuItem menuItem = menuItemRepository.findById(order.getMenuItemId())
+        MenuItem menuItem = menuItemRepository.findById(order.getMenuItem().getId())
                 .orElseThrow(() -> new RuntimeException("Menu item not found"));
 
         // ✅ Calculate total price

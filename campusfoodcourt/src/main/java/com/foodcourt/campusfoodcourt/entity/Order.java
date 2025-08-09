@@ -13,18 +13,20 @@ public class Order {
     private Long id;
 
     // Link to the User who placed the order
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // ID of the menu item being ordered
-    private Long menuItemId;
+
+    @ManyToOne
+    @JoinColumn(name = "menu_item_id", nullable = false)
+    private MenuItem menuItem;
 
     // Quantity ordered
     private int quantity;
-
-    // Total price for this order
-    private double Price;
+    
+    @Column(name = "total_price")
+    private double totalPrice;
 
     // Optional: Order time
     private LocalDateTime orderTime = LocalDateTime.now();
@@ -47,14 +49,6 @@ public class Order {
         this.user = user;
     }
 
-    public Long getMenuItemId() {
-        return menuItemId;
-    }
-
-    public void setMenuItemId(Long menuItemId) {
-        this.menuItemId = menuItemId;
-    }
-
     public int getQuantity() {
         return quantity;
     }
@@ -64,11 +58,11 @@ public class Order {
     }
 
     public double getTotalPrice() {
-        return Price;
+        return totalPrice;
     }
 
     public void setTotalPrice(double totalPrice) {
-        this.Price = totalPrice;
+        this.totalPrice = totalPrice;
     }
 
     public LocalDateTime getOrderTime() {
@@ -79,13 +73,11 @@ public class Order {
         this.orderTime = orderTime;
     }
 
-	public void setStatus(String string) {
-		// TODO Auto-generated method stub
-		
+	public MenuItem getMenuItem() {
+		return menuItem;
 	}
 
 	public void setMenuItem(MenuItem menuItem) {
-		// TODO Auto-generated method stub
-		
+		this.menuItem = menuItem;
 	}
 }

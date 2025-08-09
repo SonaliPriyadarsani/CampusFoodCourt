@@ -14,11 +14,11 @@ public class MenuItem {
     private double price;
     private String category;
     private boolean available;
-
-    // --- Constructors ---
+    
     public MenuItem() {
-        // Default constructor for JPA
+        // no-arg constructor required
     }
+
 
     public MenuItem(String name, String description, double price, String category, boolean available) {
         this.name = name;

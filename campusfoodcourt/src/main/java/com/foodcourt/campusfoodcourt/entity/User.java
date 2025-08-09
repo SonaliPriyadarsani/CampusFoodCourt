@@ -65,5 +65,7 @@ public class User {
         this.role = role;
     }
 
+    @Column(nullable = false, unique = true)
+    private String username;
     
 }

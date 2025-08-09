@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.foodcourt.campusfoodcourt.entity.CartItem;
 import com.foodcourt.campusfoodcourt.entity.MenuItem;
 import com.foodcourt.campusfoodcourt.entity.Order;
+import com.foodcourt.campusfoodcourt.entity.Role;
 import com.foodcourt.campusfoodcourt.entity.User;
 import com.foodcourt.campusfoodcourt.repository.MenuItemRepository;
 import com.foodcourt.campusfoodcourt.repository.OrderRepository;
@@ -60,7 +64,7 @@ public class CartController {
         // Check if item already in cart
         boolean found = false;
         for (CartItem item : cart) {
-            if (item.getMenuItemId().equals(menuItemId)) {
+            if (item.getMenuItem().equals(menuItemId)) {
                 item.setQuantity(item.getQuantity() + quantity);
                 found = true;
                 break;
@@ -69,20 +73,19 @@ public class CartController {
 
         if (!found) {
             CartItem newItem = new CartItem();
-            newItem.setMenuItemId(menuItemId);
+            newItem.setMenuItem(menuItemId); // ✅ corrected method name
             newItem.setName(menuItem.getName());
             newItem.setPrice(menuItem.getPrice());
             newItem.setQuantity(quantity);
             cart.add(newItem);
         }
 
+        // Update session
         session.setAttribute("cart", cart);
         redirectAttributes.addFlashAttribute("success", "Item added to cart");
 
         return "redirect:/menu";
     }
-
-
 
 
     @PostMapping("/place")
@@ -91,37 +94,59 @@ public class CartController {
         if (cart == null || cart.isEmpty()) return "redirect:/menu";
 
         User user = userService.getLoggedInUser(principal);
-        
+        if (user == null) {
+            throw new RuntimeException("Logged in user not found");
+        }
+
         for (CartItem c : cart) {
+            // ✅ Fetch MenuItem by ID
+            MenuItem menuItem = menuItemRepository.findById(c.getMenuItem())
+                    .orElseThrow(() -> new RuntimeException("MenuItem not found"));
+
             Order order = new Order();
             order.setUser(user);
-            order.setMenuItemId(c.getMenuItemId());
+            order.setMenuItem(menuItem); // ✅ Set MenuItem object, not ID
             order.setQuantity(c.getQuantity());
             order.setTotalPrice(c.getQuantity() * c.getPrice());
             order.setOrderTime(LocalDateTime.now());
+
             orderRepository.save(order);
         }
 
         session.removeAttribute("cart");
-        return "redirect:/student_bookings"; // confirmation or orders page
+
+        // ✅ Role-based redirection
+        Role role = user.getRole(); // Assuming enum: STUDENT, TEACHER, ADMIN
+
+        if ("STUDENT".equals(role.name())) {
+            return "redirect:/student_orders";
+        } else if ("TEACHER".equals(role.name())) {
+            return "redirect:/teacher_bookings";
+        } else {
+            return "redirect:/admin_dashboard";
+        }
     }
+
     
     @PostMapping("/remove")
-    public String removeFromCart(@RequestParam Long menuItemId, HttpSession session) {
+    public String removeFromCart(@RequestParam Long menuItem, HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
-            cart.removeIf(item -> item.getMenuItemId().equals(menuItemId));
+            // Remove item matching the given menuItem ID
+            cart.removeIf(item -> item.getMenuItem().equals(menuItem));
             session.setAttribute("cart", cart);
         }
         return "redirect:/cart";
     }
 
     @PostMapping("/update")
-    public String updateCartQuantity(@RequestParam Long menuItemId, @RequestParam int quantity, HttpSession session) {
+    public String updateCartQuantity(@RequestParam Long menuItem,
+                                     @RequestParam int quantity,
+                                     HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
             for (CartItem item : cart) {
-                if (item.getMenuItemId().equals(menuItemId)) {
+                if (item.getMenuItem().equals(menuItem)) {
                     item.setQuantity(quantity);
                     break;
                 }
@@ -150,7 +175,7 @@ public class CartController {
     public String removeItem(@PathVariable Long id, HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
-            cart.removeIf(item -> item.getMenuItemId().equals(id));
+            cart.removeIf(item -> item.getMenuItem().equals(id));
         }
         session.setAttribute("cart", cart);
         return "redirect:/cart";

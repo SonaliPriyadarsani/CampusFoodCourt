@@ -41,6 +41,4 @@ public class AdminController {
         return "redirect:/admin/menu?deleted=true";
     }
 
-
-
 }

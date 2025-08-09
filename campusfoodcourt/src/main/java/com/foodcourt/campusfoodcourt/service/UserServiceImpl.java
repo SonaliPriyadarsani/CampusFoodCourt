@@ -23,10 +23,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User saveUser(User user) {
         return userRepository.save(user);
     }
-
-    @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByUsername(String email) {
+        return userRepository.findByEmail(email); // ✅ this will work
     }
 
     @Override
@@ -51,16 +49,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 Collections.singletonList(authority)
         );
     }
-
 	@Override
-	public User getLoggedInUser(Principal principal) {
+	public User getUserByEmail(String email) {
 		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findByEmail(email);
 	}
 
-	@Override
-	public User findByUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public User getLoggedInUser(Principal principal) {
+        if (principal == null) return null;
+        String username = principal.getName();
+        return findByUsername(username); 
+    }
+
 }
