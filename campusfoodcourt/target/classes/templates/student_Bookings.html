@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings - Student</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+  <div class="container-fluid">
+    <h3>Campus Food Court</h3>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-danger fw-bold" th:href="@{/logout}">🚪 Logout</a>
+        </li>
+        <li class="nav-item">
+             <a th:href="@{/menu_home}" class="nav-link text-danger fw-bold"  >🏠Home</a>               
+         </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<h2>My Bookings</h2>
+
+<!-- Case 1: If student has not ordered anything yet -->
+<div th:if="${#lists.isEmpty(orders)}">
+    <p>You did not order anything till now. Please order first.</p>
+    <a th:href="@{/menu}">
+        <button>Go to Menu</button>
+    </a>
+</div>
+
+<!-- If orders exist -->
+<div th:if="${orders != null and !#lists.isEmpty(orders)}">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Order Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}"></td>
+    <td th:text="${order.menuItem != null ? order.menuItem.name : 'N/A'}"></td>
+                <td th:text="${order.quantity}"></td>
+                <td th:text="${order.totalPrice}"></td>
+                <td th:text="${#temporals.format(order.orderTime, 'dd-MM-yyyy HH:mm')}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+    <div style="margin-top:10px;">
+    <h3>Want to book a table?</h3>
+
+    <a th:if="${userRole == 'STUDENT'}" th:href="@{/student/book-table}">
+        <button>Book Table</button>
+    </a>
+
+    <a th:if="${userRole == 'TEACHER'}" th:href="@{/teacher/book-table}">
+        <button>Book Table</button>
+    </a>
+</div>
+    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

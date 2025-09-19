@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Orders - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+    <div class="container-fluid">
+        <h3>Campus Food Court - Admin</h3>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-danger fw-bold" th:href="@{/logout}">🚪 Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/menu}" class="nav-link text-primary">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/menulist}" class="nav-link text-primary">Menu List</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/admin/orders}" class="nav-link text-primary">View Orders</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2>All Orders</h2>
+
+    <div th:if="${#lists.isEmpty(orders)}">
+        <p>No orders found.</p>
+    </div>
+
+    <div th:if="${orders != null and !#lists.isEmpty(orders)}">
+        <table class="table table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Order Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.menuItem != null ? order.menuItem.name : 'N/A'}"></td>
+                    <td th:text="${order.quantity}"></td>
+                    <td th:text="${order.totalPrice}"></td>
+                    <td th:text="${order.status}"></td>
+                    <td th:text="${#temporals.format(order.orderTime, 'dd-MM-yyyy HH:mm')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

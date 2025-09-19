@@ -16,4 +16,6 @@ public interface OrderService {
     Optional<Order> getOrderById(Long id);
 
     void deleteOrder(Long id);
+
+	List<Order> findByUser(User user);
 }

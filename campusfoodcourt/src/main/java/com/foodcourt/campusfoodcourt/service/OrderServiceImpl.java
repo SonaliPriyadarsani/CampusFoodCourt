@@ -52,4 +52,10 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
     }
+
+	@Override
+	public List<Order> findByUser(User user) {
+		// TODO Auto-generated method stub
+		return orderRepository.findByUser(user);
+	}
 }

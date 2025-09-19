@@ -1,47 +1,110 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Admin Menu List</title></head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Menu - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #0d6efd;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        table {
+            background-color: white;
+        }
+
+        .alert-success {
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
 <body>
 
-<nav style="background-color: #333; padding: 10px; color: white; display: flex; justify-content: space-between;">
-    <div>
-        <a href="/admin/menu" style="color: white; text-decoration: none; margin-right: 20px;">Dashboard</a>
-        <a href="/admin/addmenuitem" style="color: white; text-decoration: none; margin-right: 20px;">Add Menu Item</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Campus Food Court Admin</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/menu">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/addmenuitem">Add Menu Item</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger fw-bold" th:href="@{/logout}">🚪 Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">All Menu Items</h2>
+
+        <div class="text-end mb-3">
+            <a href="/admin/addmenuitem" class="btn btn-success">➕ Add New Item</a>
+        </div>
+
+        <div class="table-responsive shadow-sm bg-white rounded">
+            <table class="table table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price (₹)</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${menuItems}">
+                        <td th:text="${item.name}">Burger</td>
+                        <td th:text="${item.description}">Delicious Cheese Burger</td>
+                        <td th:text="${item.price}">150</td>
+                        <td class="text-center">
+                            <form th:action="@{'/admin/delete/' + ${item.id}}" method="post"
+                                onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${param.deleted}" class="alert alert-success text-center">
+            ✅ Item deleted successfully!
+        </div>
     </div>
 
-    <div>
-        <form th:action="@{/logout}" method="post" style="display:inline;">
-            <button type="submit" style="background-color: #ff4d4d; border: none; color: white; padding: 8px 15px; cursor: pointer;">Logout</button>
-        </form>
-    </div>
-</nav>
+    <footer>
+        &copy; 2025 Campus Food Court | All Rights Reserved
+    </footer>
 
-<h2>All Menu Items (Admin View)</h2>
-<a th:href="@{/admin/addmenuitem}">Add New Item</a>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="item : ${menuItems}">
-            <td th:text="${item.name}">Name</td>
-            <td th:text="${item.description}">Description</td>
-            <td th:text="${item.price}">Price</td>
-            <td>
-                <form th:action="@{'/admin/delete/' + ${item.id}}" method="post">
-                    <button type="submit" onclick="return confirm('Are you sure to delete this item?')">Delete</button>
-                </form>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<p th:if="${param.deleted}" style="color: green;">Item deleted successfully!</p>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

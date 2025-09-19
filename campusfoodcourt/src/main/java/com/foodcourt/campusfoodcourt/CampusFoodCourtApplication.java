@@ -6,6 +6,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CampusFoodCourtApplication {
     public static void main(String[] args) {
         SpringApplication.run(CampusFoodCourtApplication.class, args);
-
     }
 }

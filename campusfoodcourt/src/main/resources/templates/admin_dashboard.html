@@ -1,26 +1,113 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Campus Food Court</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f1f5f9;
+        }
+
+        .navbar {
+            background-color: rgb(64, 128, 128);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .card {
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            background-color: rgb(64, 128, 128);      
+            color: white;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-<nav style="background-color: #333; padding: 10px; color: white; display: flex; justify-content: space-between;">
-    <div>
-        <a href="/admin/menu" style="color: white; text-decoration: none; margin-right: 20px;">Dashboard</a>
-        <a href="/admin/addmenuitem" style="color: white; text-decoration: none; margin-right: 20px;">Add Menu Item</a>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Campus Food Court - Admin</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/menu">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/addmenuitem">Add Menu Item</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger fw-bold" th:href="@{/logout}">🚪 Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Welcome, Admin</h1>
+        <p class="text-center text-secondary">Manage the campus food court effectively from this dashboard</p>
+
+        <div class="row mt-4 g-4 justify-content-center">
+
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Menu</h5>
+                        <p class="card-text">View, edit, and remove existing menu items</p>
+                        <a href="/admin/menulist" class="btn btn-primary">Manage Menu</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Add New Menu Item</h5>
+                        <p class="card-text">Add new delicious food items to the menu</p>
+                        <a href="/admin/addmenuitem" class="btn btn-success">Add Item</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">View Orders</h5>
+                        <p class="card-text">Monitor placed orders and track their status</p>
+                        <a href="/admin/orders" class="btn btn-warning">View Orders</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <div>
-        <form th:action="@{/logout}" method="post" style="display:inline;">
-            <button type="submit" style="background-color: #ff4d4d; border: none; color: white; padding: 8px 15px; cursor: pointer;">Logout</button>
-        </form>
-    </div>
-</nav>
-<div class="container mt-5">
-    <h2>Welcome to Admin Dashboard</h2>
-    <p>Here you can manage menu, view orders, and more.</p>
-    <a href="/admin/addmenuitem" class="btn btn-primary">Add Menu Item</a>
-</div>
+    <footer>
+        &copy; 2025 Campus Food Court | All Rights Reserved
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

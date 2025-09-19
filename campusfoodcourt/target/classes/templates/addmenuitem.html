@@ -1,20 +1,106 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Add Menu Item</title></head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Menu Item - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #0d6efd;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
 <body>
-<h2>Add New Menu Item</h2>
-<form th:action="@{/admin/addmenuitem}" th:object="${menuItem}" method="post">
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required/><br/>
 
-    <label>Description:</label>
-    <textarea th:field="*{description}" rows="3" cols="30" placeholder="Enter food description..."></textarea><br/>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Campus Food Court Admin</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/menu">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/addmenuitem">Add Menu Item</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger fw-bold" th:href="@{/logout}">🚪 Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <label>Price:</label>
-    <input type="number" th:field="*{price}" step="0.01" required/><br/>
+    <!-- Form Container -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Add New Menu Item</h2>
 
-    <button type="submit">Add Menu Item</button>
-</form>
-<a href="/admin/menulist">Back to Menu List</a>
+        <div class="row justify-content-center">
+            <div class="col-md-6 form-container">
+                <form th:action="@{/admin/addmenuitem}" th:object="${menuItem}" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">🍔 Name:</label>
+                        <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Enter food name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">📝 Description:</label>
+                        <textarea th:field="*{description}" class="form-control" id="description" rows="4"
+                            placeholder="Enter food description..." required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label">💵 Price (₹):</label>
+                        <input type="number" th:field="*{price}" class="form-control" id="price" step="0.01"
+                            placeholder="Enter price" required>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">➕ Add Menu Item</button>
+                    </div>
+
+                    <div class="mt-3 text-center">
+                        <a href="/admin/menulist" class="btn btn-secondary">⬅️ Back to Menu List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Campus Food Court | All Rights Reserved
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

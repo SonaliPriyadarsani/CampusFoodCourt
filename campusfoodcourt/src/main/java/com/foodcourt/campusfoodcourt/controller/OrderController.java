@@ -4,6 +4,7 @@ import com.foodcourt.campusfoodcourt.entity.Order;
 import com.foodcourt.campusfoodcourt.entity.User;
 import com.foodcourt.campusfoodcourt.repository.MenuItemRepository;
 import com.foodcourt.campusfoodcourt.repository.OrderRepository;
+import com.foodcourt.campusfoodcourt.service.OrderService;
 import com.foodcourt.campusfoodcourt.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -22,42 +24,84 @@ public class OrderController {
     private OrderRepository orderRepository;
 
     @Autowired
-    private MenuItemRepository menuItemRepository;
-
-    @Autowired
     private UserService userService;
-
+    @Autowired private OrderService orderService;
     
-    @GetMapping("/student/order")
-    public String showOrderPage(Model model) {
-        model.addAttribute("menuItems", menuItemRepository.findAll());
-        model.addAttribute("orderSuccess", false);  // default
-        return "studentorder";
+          
+    @GetMapping("/student/bookings")
+    public String studentBookings(Model model, Principal principal) {
+        User user = userService.getUserByEmail(principal.getName());
+
+        // Fetch all orders of this user
+        List<Order> orders = orderService.findByUser(user);
+
+        // Keep only orders placed within the last 30 minutes
+        LocalDateTime thirtyMinutesAgo = LocalDateTime.now().minusMinutes(30);
+        List<Order> recentOrders = orders.stream()
+                .filter(order -> order.getOrderTime().isAfter(thirtyMinutesAgo))
+                .toList();
+
+        model.addAttribute("orders", recentOrders);
+
+        return "student_Bookings";
     }
 
-    @GetMapping("/student_bookings")
-    public String viewBookings(Model model, Principal principal) {
-        User user = userService.getLoggedInUser(principal);
-        List<Order> orders = orderRepository.findByUser(user);
-        model.addAttribute("orders", orders);
-        return "student_bookings";
-    }
-    
-    @GetMapping("/student/orders")
+    @GetMapping("/student_orders")
     public String viewStudentOrders(Authentication authentication, Model model) {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
 
-        model.addAttribute("orders", orderRepository.findByUser(user));
-        return "student_orders";  // Create this HTML
+        List<Order> orders = orderRepository.findByUser(user);
+
+        // Auto-complete orders after 30 minutes
+        LocalDateTime now = LocalDateTime.now();
+        for (Order order : orders) {
+            if (order.getOrderTime() != null &&
+                order.getOrderTime().plusMinutes(30).isBefore(now)) {
+                order.setStatus("Completed");
+            } else {
+                order.setStatus("Pending");
+            }
+        }
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("userRole", user.getRole().name());  // ✅ Pass user role
+        model.addAttribute("hasOrders", !orders.isEmpty()); // ✅ flag
+        return "student_orders";
     }
     
-    @GetMapping("/orders")
-    public String viewUserOrders(Authentication authentication, Model model) {
+ // ✅ Teacher Orders (reuse student_orders.html)
+    @GetMapping("/teacher/orders")
+    public String viewTeacherOrders(Authentication authentication, Model model) {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
-        model.addAttribute("orders", orderRepository.findByUser(user));
-        return "user_orders"; // Create this page
+
+        List<Order> orders = orderRepository.findByUser(user);
+
+        // Auto-complete orders after 30 minutes
+        LocalDateTime now = LocalDateTime.now();
+        for (Order order : orders) {
+            if (order.getOrderTime() != null &&
+                order.getOrderTime().plusMinutes(30).isBefore(now)) {
+                order.setStatus("Completed");
+            } else {
+                order.setStatus("Pending");
+            }
+        }
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("hasOrders", !orders.isEmpty());
+        return "student_orders"; // ✅ Reuse student_orders.html
+    }
+
+    // ✅ Teacher Bookings (reuse student_bookings.html)
+    @GetMapping("/teacher/bookings")
+    public String viewTeacherBookings(Model model, Principal principal) {
+        User user = userService.getLoggedInUser(principal);
+        List<Order> orders = orderRepository.findByUser(user);
+
+        model.addAttribute("orders", orders);
+        return "student_bookings"; // ✅ Reuse student_bookings.html
     }
 
 }

@@ -1,17 +1,16 @@
 package com.foodcourt.campusfoodcourt.controller;
 
 import java.security.Principal;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,16 +60,18 @@ public class CartController {
             return "redirect:/menu";
         }
 
+        int totalPrice = 0;
         // Check if item already in cart
         boolean found = false;
         for (CartItem item : cart) {
             if (item.getMenuItem().equals(menuItemId)) {
                 item.setQuantity(item.getQuantity() + quantity);
+                totalPrice += item.getPrice() * item.getQuantity();
                 found = true;
                 break;
             }
         }
-
+        
         if (!found) {
             CartItem newItem = new CartItem();
             newItem.setMenuItem(menuItemId); // ✅ corrected method name
@@ -79,7 +80,6 @@ public class CartController {
             newItem.setQuantity(quantity);
             cart.add(newItem);
         }
-
         // Update session
         session.setAttribute("cart", cart);
         redirectAttributes.addFlashAttribute("success", "Item added to cart");
@@ -91,6 +91,7 @@ public class CartController {
     @PostMapping("/place")
     public String placeFinalOrder(HttpSession session, Principal principal) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
         if (cart == null || cart.isEmpty()) return "redirect:/menu";
 
         User user = userService.getLoggedInUser(principal);
@@ -99,33 +100,33 @@ public class CartController {
         }
 
         for (CartItem c : cart) {
-            // ✅ Fetch MenuItem by ID
             MenuItem menuItem = menuItemRepository.findById(c.getMenuItem())
                     .orElseThrow(() -> new RuntimeException("MenuItem not found"));
 
             Order order = new Order();
             order.setUser(user);
-            order.setMenuItem(menuItem); // ✅ Set MenuItem object, not ID
+            order.setMenuItem(menuItem);
             order.setQuantity(c.getQuantity());
             order.setTotalPrice(c.getQuantity() * c.getPrice());
             order.setOrderTime(LocalDateTime.now());
+            order.setStatus("Processing");
 
             orderRepository.save(order);
         }
 
         session.removeAttribute("cart");
 
-        // ✅ Role-based redirection
-        Role role = user.getRole(); // Assuming enum: STUDENT, TEACHER, ADMIN
+        Role role = user.getRole();
 
         if ("STUDENT".equals(role.name())) {
-            return "redirect:/student_orders";
+            return "redirect:/student/bookings";
         } else if ("TEACHER".equals(role.name())) {
-            return "redirect:/teacher_bookings";
+            return "redirect:/student/bookings";
         } else {
             return "redirect:/admin_dashboard";
         }
     }
+
 
     
     @PostMapping("/remove")
@@ -155,21 +156,26 @@ public class CartController {
         }
         return "redirect:/cart";
     }
-
+    
+            
     @GetMapping("")
     public String viewCart(HttpSession session, Model model) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        if (cart == null) cart = new ArrayList<>();
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
 
-        double total = cart.stream()
-                           .mapToDouble(i -> i.getPrice() * i.getQuantity())
-                           .sum();
+        double totalPrice = cart.stream()
+                                .mapToDouble(CartItem::getPrice)
+                                .sum();
 
-        model.addAttribute("cart", cart);
-        model.addAttribute("total", total);
-        return "cart";
+        // Properly pass cart as "cartItems"
+        model.addAttribute("cartItems", cart);
+        model.addAttribute("totalPrice", totalPrice);
+
+        return "cart";  // Thymeleaf cart.html will use cartItems
     }
-    
+
 
     @GetMapping("/remove/{id}")
     public String removeItem(@PathVariable Long id, HttpSession session) {

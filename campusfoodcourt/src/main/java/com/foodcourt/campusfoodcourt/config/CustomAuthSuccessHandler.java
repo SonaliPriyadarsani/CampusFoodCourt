@@ -30,11 +30,11 @@ public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
                     break;
                 case "ROLE_STUDENT":
                 case "STUDENT":
-                    redirectURL += "/menu";
+                    redirectURL += "/home";
                     break;
                 case "ROLE_TEACHER":
                 case "TEACHER":
-                    redirectURL += "/menu";
+                    redirectURL += "/home";
                     break;
                 default:
                     redirectURL += "/access-denied";
