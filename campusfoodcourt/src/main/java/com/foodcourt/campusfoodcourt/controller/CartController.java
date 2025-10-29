@@ -1,8 +1,6 @@
 package com.foodcourt.campusfoodcourt.controller;
 
 import java.security.Principal;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.foodcourt.campusfoodcourt.entity.CartItem;
+import com.foodcourt.campusfoodcourt.service.CartService;
 import com.foodcourt.campusfoodcourt.entity.MenuItem;
 import com.foodcourt.campusfoodcourt.entity.Order;
 import com.foodcourt.campusfoodcourt.entity.Role;
@@ -40,6 +39,10 @@ public class CartController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private CartService cartService;
+
 
     @PostMapping("/add")
     public String addToCart(@RequestParam("menuItemId") Long menuItemId,
@@ -60,17 +63,16 @@ public class CartController {
             return "redirect:/menu";
         }
 
-        int totalPrice = 0;
-        // Check if item already in cart
+     // Check if item already in cart
         boolean found = false;
         for (CartItem item : cart) {
             if (item.getMenuItem().equals(menuItemId)) {
                 item.setQuantity(item.getQuantity() + quantity);
-                totalPrice += item.getPrice() * item.getQuantity();
                 found = true;
                 break;
             }
         }
+
         
         if (!found) {
             CartItem newItem = new CartItem();
@@ -128,35 +130,6 @@ public class CartController {
     }
 
 
-    
-    @PostMapping("/remove")
-    public String removeFromCart(@RequestParam Long menuItem, HttpSession session) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        if (cart != null) {
-            // Remove item matching the given menuItem ID
-            cart.removeIf(item -> item.getMenuItem().equals(menuItem));
-            session.setAttribute("cart", cart);
-        }
-        return "redirect:/cart";
-    }
-
-    @PostMapping("/update")
-    public String updateCartQuantity(@RequestParam Long menuItem,
-                                     @RequestParam int quantity,
-                                     HttpSession session) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        if (cart != null) {
-            for (CartItem item : cart) {
-                if (item.getMenuItem().equals(menuItem)) {
-                    item.setQuantity(quantity);
-                    break;
-                }
-            }
-            session.setAttribute("cart", cart);
-        }
-        return "redirect:/cart";
-    }
-    
             
     @GetMapping("")
     public String viewCart(HttpSession session, Model model) {
@@ -166,8 +139,9 @@ public class CartController {
         }
 
         double totalPrice = cart.stream()
-                                .mapToDouble(CartItem::getPrice)
-                                .sum();
+                .mapToDouble(item -> item.getPrice() * item.getQuantity())
+                .sum();
+
 
         // Properly pass cart as "cartItems"
         model.addAttribute("cartItems", cart);
@@ -176,15 +150,36 @@ public class CartController {
         return "cart";  // Thymeleaf cart.html will use cartItems
     }
 
+ // Update item quantity
+    @PostMapping("/update/{menuItem}")
+    public String updateItem(@PathVariable("menuItem") Long menuItem,
+                             @RequestParam("quantity") int quantity,
+                             HttpSession session) {
 
-    @GetMapping("/remove/{id}")
-    public String removeItem(@PathVariable Long id, HttpSession session) {
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
+        if (cart != null) {
+            for (CartItem item : cart) {
+                if (item.getMenuItem().equals(menuItem)) {
+                    item.setQuantity(quantity);
+                    item.setTotal(item.getPrice() * quantity);
+                    break;
+                }
+            }
+            session.setAttribute("cart", cart);
+        }
+
+        return "redirect:/cart";
+    }
+    @PostMapping("/remove/{menuItem}")
+    public String removeItem(@PathVariable Long menuItem, HttpSession session) {
         List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart != null) {
-            cart.removeIf(item -> item.getMenuItem().equals(id));
+            cart.removeIf(item -> item.getMenuItem().equals(menuItem));
         }
         session.setAttribute("cart", cart);
         return "redirect:/cart";
     }
 
+    
 }

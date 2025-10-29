@@ -1,46 +1,127 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Table Booking</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="bg-light">
+    <title>Student Table Booking | Campus Food Court</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
-  <div class="container-fluid">
-    <h3>Campus Food Court</h3>
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link text-danger fw-bold" th:href="@{/logout}">🚪 Logout</a>
-        </li>
-        <li class="nav-item">
-             <a th:href="@{/menu_home}" class="nav-link text-danger fw-bold"  >🏠Home</a>               
-         </li>
-      </ul>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('/images/th.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #2c2c2c;
+        }
+
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #f4d03f, #e67e22);
+        }
+
+        .navbar h3 {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .navbar .nav-link {
+            color: #fff !important;
+            font-weight: 600;
+        }
+
+        .navbar .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .card {
+            background-color: rgba(255, 249, 230, 0.95);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #6e2c00;
+            font-weight: bold;
+        }
+
+        .btn-custom {
+            background: linear-gradient(to right, #e67e22, #f4d03f);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background: linear-gradient(to right, #f4d03f, #e67e22);
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            background-color: #fdebd0;
+            border: none;
+            color: #6e2c00;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<nav class="navbar navbar-expand-lg shadow-sm mb-5">
+    <div class="container-fluid px-4">
+        <h3>Campus Food Court</h3>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/menu_home}">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">🚪 Logout</a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card col-md-6">
+        <h2>🎓 Student Table Booking</h2>
 
-<div class="container mt-5">
-    <h2 class="text-center text-primary mb-4">🪑 Student Table Booking</h2>
+        <form th:action="@{/booking/student}" method="post">
+            <div class="mb-3">
+                <label for="members" class="form-label fw-bold">Number of Members</label>
+                <input type="number" id="members" name="members" class="form-control" min="1" max="10" required>
+            </div>
 
-    <!-- Booking Form -->
-    <form th:action="@{/student/book-table}" method="post" class="card p-4 shadow-sm">
-        <div class="mb-3">
-            <label for="members" class="form-label">How many members?</label>
-            <input type="number" class="form-control" id="members" name="members" required min="1">
+            <button type="submit" class="btn btn-custom w-100">Book Table</button>
+        </form>
+
+        <div th:if="${tableNumber}" class="alert text-center mt-4">
+            ✅ Your table number is: <strong th:text="${tableNumber}"></strong>
         </div>
-        <button type="submit" class="btn btn-success w-100 fw-bold">Book Table</button>
-    </form>
-
-    <!-- Confirmation Message -->
-    <div class="alert alert-success mt-4 text-center" th:if="${confirmationMessage}">
-        <p th:text="${confirmationMessage}"></p>
     </div>
 </div>
+
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

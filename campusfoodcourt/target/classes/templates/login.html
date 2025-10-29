@@ -3,22 +3,21 @@
 <head>
     <title>Login</title>
     <style>
-        body ,html{
+        body, html {
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            background: url('/images/Luscious.jpg') no-repeat center center fixed;
             align-items: center;
+            background: url('/images/login.jpg') no-repeat center center fixed;
             height: 100%;
-            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-size: cover;
         }
 
-
         .login-container {
-            background: #fb5f39;
+            background: #fb5f39; /* warm food tone */
             padding: 40px 50px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
@@ -51,8 +50,8 @@
         input[type="text"]:focus,
         input[type="password"]:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.6);
+            border-color: #ffb84d;
+            box-shadow: 0 0 5px rgba(255, 184, 77, 0.6);
         }
 
         button {
@@ -67,7 +66,7 @@
         }
 
         button:hover {
-            background-color: #5563c1;
+            background-color: #007a00;
         }
 
         p {
@@ -75,8 +74,15 @@
             font-weight: 600;
             font-size: 14px;
         }
-        
-        
+
+        footer {
+            margin-top: 25px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0.85;
+        }
     </style>
 </head>
 <body>
@@ -89,7 +95,10 @@
         </form>
         <p th:if="${param.error}">Invalid email or password</p>
         <p th:if="${param.logout}">✅ You have successfully logged out.</p>
-    </div>
 
+        <div class="link">
+      <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
+    </div>
+    </div>
 </body>
 </html>

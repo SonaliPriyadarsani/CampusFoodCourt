@@ -2,7 +2,6 @@ package com.foodcourt.campusfoodcourt.controller;
 
 import com.foodcourt.campusfoodcourt.entity.Order;
 import com.foodcourt.campusfoodcourt.entity.User;
-import com.foodcourt.campusfoodcourt.repository.MenuItemRepository;
 import com.foodcourt.campusfoodcourt.repository.OrderRepository;
 import com.foodcourt.campusfoodcourt.service.OrderService;
 import com.foodcourt.campusfoodcourt.service.UserService;
@@ -40,6 +39,7 @@ public class OrderController {
         List<Order> recentOrders = orders.stream()
                 .filter(order -> order.getOrderTime().isAfter(thirtyMinutesAgo))
                 .toList();
+        model.addAttribute("userRole", user.getRole().name()); // ✅ Add this line
 
         model.addAttribute("orders", recentOrders);
 
@@ -70,38 +70,7 @@ public class OrderController {
         return "student_orders";
     }
     
- // ✅ Teacher Orders (reuse student_orders.html)
-    @GetMapping("/teacher/orders")
-    public String viewTeacherOrders(Authentication authentication, Model model) {
-        String email = authentication.getName();
-        User user = userService.getUserByEmail(email);
+ 
 
-        List<Order> orders = orderRepository.findByUser(user);
-
-        // Auto-complete orders after 30 minutes
-        LocalDateTime now = LocalDateTime.now();
-        for (Order order : orders) {
-            if (order.getOrderTime() != null &&
-                order.getOrderTime().plusMinutes(30).isBefore(now)) {
-                order.setStatus("Completed");
-            } else {
-                order.setStatus("Pending");
-            }
-        }
-
-        model.addAttribute("orders", orders);
-        model.addAttribute("hasOrders", !orders.isEmpty());
-        return "student_orders"; // ✅ Reuse student_orders.html
-    }
-
-    // ✅ Teacher Bookings (reuse student_bookings.html)
-    @GetMapping("/teacher/bookings")
-    public String viewTeacherBookings(Model model, Principal principal) {
-        User user = userService.getLoggedInUser(principal);
-        List<Order> orders = orderRepository.findByUser(user);
-
-        model.addAttribute("orders", orders);
-        return "student_bookings"; // ✅ Reuse student_bookings.html
-    }
 
 }

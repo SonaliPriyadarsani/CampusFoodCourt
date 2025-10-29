@@ -2,106 +2,195 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Food Court - Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Food Court - Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
+  <style>
+    body {
+      background-color: #fff8f3; /* warm cream background */
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        .navbar {
-            background-color: #0d6efd;
-        }
+    /* Navbar */
+    .navbar {
+      background: linear-gradient(90deg, #ff7e00, #ff4500);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: white;
-        }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #fff !important;
+      letter-spacing: 1px;
+    }
 
-        .quote-section {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 40px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
+    .nav-link {
+      color: #fff !important;
+      font-weight: 500;
+      transition: 0.3s;
+    }
 
-        .action-buttons .btn {
-            font-size: 1.1rem;
-        }
+    .nav-link:hover {
+      color: #ffe29f !important;
+    }
 
-        footer {
-            background-color: #0d6efd;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-    </style>
+    /* Quote Section */
+    .quote-section {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 50px 30px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 80px auto 40px;
+    }
+
+    .quote-section h3 {
+      color: #ff4500;
+      font-weight: 700;
+    }
+
+    .quote-section p {
+      color: #6c757d;
+      font-size: 1.1rem;
+    }
+
+    /* Action Buttons */
+    .action-buttons .btn {
+      font-size: 1.1rem;
+      padding: 15px;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.3s ease-in-out;
+      border: none;
+      color: #fff;
+    }
+
+    .btn-menu {
+      background-color: #ff6600;
+    }
+
+    .btn-orders {
+      background-color: #ffb700;
+    }
+
+    .btn-book {
+      background-color: #ff8c42;
+    }
+
+    .btn-bookings {
+      background-color: #e85d04;
+    }
+
+    .btn-cart {
+      background-color: #d00000;
+    }
+
+    .btn-menu:hover {
+      background-color: #ff7e1a;
+      transform: translateY(-3px);
+    }
+
+    .btn-orders:hover {
+      background-color: #ffca2c;
+      transform: translateY(-3px);
+    }
+
+    .btn-book:hover {
+      background-color: #ffa75f;
+      transform: translateY(-3px);
+    }
+
+    .btn-bookings:hover {
+      background-color: #f48c06;
+      transform: translateY(-3px);
+    }
+
+    .btn-cart:hover {
+      background-color: #ff1e00;
+      transform: translateY(-3px);
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(90deg, #ff7e00, #ff4500);
+      color: white;
+      text-align: center;
+      padding: 12px 0;
+      font-weight: 500;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    footer span {
+      font-style: italic;
+      opacity: 0.9;
+    }
+  </style>
 </head>
 
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">Campus Food Court</a>
-            <div class="collapse navbar-collapse justify-content-end">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link text-danger fw-bold" th:href="@{/logout}">🚪 Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Quote Section -->
-    <div class="container text-center my-5 quote-section">
-        <h3 class="fw-bold text-primary">"Good Food, Good Mood!"</h3>
-        <p class="text-muted fs-5">Eat well, live well, and enjoy every bite at Campus Food Court.</p>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">🍴 Campus Food Court</a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link text-light fw-bold" th:href="@{/logout}">🚪 Logout</a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
-    <!-- Action Buttons -->
-    <div class="container text-center action-buttons my-5">
-        <div class="row g-4 justify-content-center">
+  <!-- Quote Section -->
+  <div class="quote-section text-center">
+    <h3>"Good Food, Good Mood!"</h3>
+    <p>Eat well, live well, and enjoy every bite at Campus Food Court.</p>
+  </div>
 
-            <div class="col-md-2">
-                <a class="btn btn-outline-primary w-100 p-3" th:href="@{/menu}">🍽 Menu</a>
-            </div>
+  <!-- Action Buttons -->
+  <div class="container text-center action-buttons my-5">
+    <div class="row g-4 justify-content-center">
 
-            <div class="col-md-2">
-                <a class="btn btn-outline-success w-100 p-3" th:href="@{/student_orders}" th:if="${role == 'STUDENT'}">📜 My Orders</a>
-                <a class="btn btn-outline-success w-100 p-3" th:href="@{/teacher/orders}" th:if="${role == 'TEACHER'}">📜 My Orders</a>
-            </div>
+      <div class="col-md-2 col-6">
+        <a class="btn btn-menu w-100" th:href="@{/menu}">🍽 Menu</a>
+      </div>
 
-            <div class="col-md-2">
-                <a class="btn btn-outline-warning w-100 p-3" th:href="@{/student/book-table}" th:if="${role == 'STUDENT'}">🪑 Book Table</a>
-                <a class="btn btn-outline-warning w-100 p-3" th:href="@{/teacher/book-table}" th:if="${role == 'TEACHER'}">🪑 Book Table</a>
-            </div>
+      <div class="col-md-2 col-6">
+        <a class="btn btn-orders w-100" th:href="@{/student_orders}" th:if="${role == 'STUDENT'}">📜 My Orders</a>
+        <a class="btn btn-orders w-100" th:href="@{/student_orders}" th:if="${role == 'TEACHER'}">📜 My Orders</a>
+      </div>
 
-            <div class="col-md-2">
-                <a class="btn btn-outline-info w-100 p-3" th:href="@{/student/bookings}" th:if="${role == 'STUDENT'}">📦 My Bookings</a>
-                <a class="btn btn-outline-info w-100 p-3" th:href="@{/teacher/bookings}" th:if="${role == 'TEACHER'}">📦 My Bookings</a>
-            </div>
+      <div class="col-md-2 col-6">
+        <a class="btn btn-book w-100" th:href="@{/booking/student}" th:if="${role == 'STUDENT'}">🪑 Book Table</a>
+        <a class="btn btn-book w-100" th:href="@{/booking/teacher}" th:if="${role == 'TEACHER'}">🪑 Book Table</a>
+      </div>
 
-            <div class="col-md-2">
-                <a class="btn btn-outline-danger w-100 p-3" th:href="@{/cart}">🛒 Cart</a>
-            </div>
+      <div class="col-md-2 col-6">
+        <a class="btn btn-bookings w-100" th:href="@{/student/bookings}" th:if="${role == 'STUDENT'}">📦 My Bookings</a>
+        <a class="btn btn-bookings w-100" th:href="@{/student/bookings}" th:if="${role == 'TEACHER'}">📦 My Bookings</a>
+      </div>
 
-        </div>
+      <div class="col-md-2 col-6">
+        <a class="btn btn-cart w-100" th:href="@{/cart}">🛒 Cart</a>
+      </div>
+
     </div>
+  </div>
 
-    <footer>
-        &copy; 2025 Campus Food Court | All Rights Reserved
-    </footer>
+  <!-- Footer -->
+  <footer>
+    <span>&copy; 2025 Campus Food Court || Where technology meets taste.</span>
+  </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -5,6 +5,7 @@ public class CartItem {
     private String name;
     private double price;
     private int quantity;
+    private double total;
 
     // Getters and Setters
     public Long getMenuItem() {
@@ -39,6 +40,12 @@ public class CartItem {
         this.quantity = quantity;
     }
     
+    public double getTotal() {
+        return total;
+    }
 
+    public void setTotal(double total) {
+        this.total = total;
+    }
 }
 
