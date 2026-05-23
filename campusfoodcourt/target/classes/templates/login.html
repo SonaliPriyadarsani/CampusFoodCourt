@@ -1,104 +1,398 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Food Court - Login</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
-        body, html {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        /* LEFT SIDE */
+        .left-side {
+            width: 55%;
+            position: relative;
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.55),
+                    rgba(0, 0, 0, 0.55)),
+                url('/images/login.jpg');
+
+            background-size: cover;
+            background-position: center;
+            display: flex;
             justify-content: center;
             align-items: center;
-            background: url('/images/login.jpg') no-repeat center center fixed;
-            height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-size: cover;
+            padding: 10px;
         }
 
-        .login-container {
-            background: #fb5f39; /* warm food tone */
-            padding: 40px 50px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            width: 320px;
-            text-align: center;
+        .overlay-content {
             color: white;
-            z-index: 1;
+            text-align: center;
+            max-width: 600px;
+            animation: fadeIn 1s ease;
         }
 
-        h2 {
-            margin-bottom: 30px;
-            color: #fff;
+        .overlay-content h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
         }
 
-        form {
+        .overlay-content p {
+            font-size: 1.2rem;
+            color: #f1f5f9;
+            line-height: 1.8;
+        }
+
+        .overlay-content span {
+            color: #22c55e;
+        }
+
+        /* RIGHT SIDE */
+        .right-side {
+            width: 45%;
             display: flex;
-            flex-direction: column;
-            gap: 18px;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            background-color : #FFFAFA;
+            background: linear-gradient(to bottom right, #ffffff, #f8fafc);
         }
 
-        input[type="text"],
-        input[type="password"] {
-            padding: 12px 15px;
-            border: 1.8px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            background: #98FB98;
+            padding: 15px;
+            border-radius: 28px;
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.08);
+            animation: slideUp 0.8s ease;
         }
 
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: #ffb84d;
-            box-shadow: 0 0 5px rgba(255, 184, 77, 0.6);
-        }
-
-        button {
-            background-color: #009900;
-            color: white;
-            font-size: 18px;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #007a00;
-        }
-
-        p {
-            margin-top: 20px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        footer {
-            margin-top: 25px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 500;
+        .logo {
             text-align: center;
-            opacity: 0.85;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #16a34a;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        /* INPUTS */
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box i {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 8px 8px 8px 38px;
+            border-radius: 14px;
+            border: 1px solid #dbe2ea;
+            font-size: 1rem;
+            transition: 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .input-box input:focus {
+            outline: none;
+            border-color: #22c55e;
+            background: white;
+            box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.15);
+        }
+
+        /* LOGIN BUTTON */
+        .login-btn {
+            width: 100%;
+            padding: 5px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.35);
+        }
+
+        /* LINKS */
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .register-link a {
+            color: #16a34a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ALERTS */
+        .message {
+            text-align: center;
+            margin-top: 18px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+
+        .success {
+            color: #16a34a;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        /* ANIMATION */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 992px) {
+
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+
+            .left-side {
+                width: 100%;
+                min-height: 300px;
+            }
+
+            .right-side {
+                width: 100%;
+                padding: 30px 20px;
+            }
+
+            .overlay-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .login-card {
+                padding: 35px 25px;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form th:action="@{/login}" method="post">
-            <input type="text" name="username" placeholder="Email" required />
-            <input type="password" name="password" placeholder="Password" required />
-            <button type="submit">Login</button>
-        </form>
-        <p th:if="${param.error}">Invalid email or password</p>
-        <p th:if="${param.logout}">✅ You have successfully logged out.</p>
 
-        <div class="link">
-      <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
+<body>
+
+    <!-- LEFT IMAGE SECTION -->
+    <div class="left-side">
+
+        <div class="overlay-content">
+
+            <h1>
+                Welcome to <span>Campus Food Court</span> 🍴
+            </h1>
+
+            <p>
+                Order delicious meals, manage your bookings,
+                and enjoy a seamless campus food experience.
+            </p>
+
+        </div>
+
     </div>
+
+    <!-- RIGHT LOGIN SECTION -->
+    <div class="right-side">
+
+        <div class="login-card">
+
+            <div class="logo">
+                <i class="bi bi-cup-hot-fill"></i>
+            </div>
+
+            <h2>Login</h2>
+
+            <p class="subtitle">
+                Sign in to continue to your account
+            </p>
+
+            <form th:action="@{/login}" method="post">
+
+                <!-- EMAIL -->
+                <div class="input-group">
+
+                    <label>Email Address</label>
+
+                    <div class="input-box">
+
+                        <i class="bi bi-envelope-fill"></i>
+
+                        <input type="text"
+                            name="username"
+                            placeholder="Enter your email"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="input-group">
+
+                    <label>Password</label>
+
+                    <div class="input-box">
+
+                        <i class="bi bi-lock-fill"></i>
+
+                        <input type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <!-- LOGIN BUTTON -->
+                <button type="submit"
+                    class="login-btn">
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Login
+
+                </button>
+
+            </form>
+
+            <!-- ERROR MESSAGE -->
+            <div th:if="${param.error}"
+                class="message error">
+
+                ❌ Invalid email or password
+
+            </div>
+
+            <!-- LOGOUT MESSAGE -->
+            <div th:if="${param.logout}"
+                class="message success">
+
+                ✅ Successfully logged out
+
+            </div>
+
+            <!-- REGISTER LINK -->
+            <div class="register-link">
+
+                Don't have an account?
+                <a th:href="@{/register}">
+                    Register Here
+                </a>
+
+            </div>
+
+            <div class="footer">
+                © 2025 Campus Food Court
+            </div>
+
+        </div>
+
     </div>
+
 </body>
+
 </html>
